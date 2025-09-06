@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تقرير تحليل نتائج الاستبيان - شركة الخريف لتقنية المياه والطاقة</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
         
@@ -766,9 +767,19 @@
             </table>
         </div>
         
-        <div class="highlights loading">
+        <!-- Chart Section -->
+        <div class="section loading">
+            <div class="section-header">
+                📊 Average grades by section
+            </div>
+            <div style="padding: 40px; background: white;">
+                <canvas id="departmentChart" width="800" height="400"></canvas>
+            </div>
+        </div>
+        
+        <div class="highlights">
             <div class="highlight-box positive-highlights">
-                <h4>🏆 أعلى 5 نقاط إيجابية (حسب النسبة الإيجابية)</h4>
+                <h4>🟢 النقاط الإيجابية البارزة</h4>حسب النسبة الإيجابية)</h4>
                 <ul class="highlight-list">
                     <li><strong>Q1:</strong> I feel proud to be a member of the company - 90.5%</li>
                     <li><strong>Q33:</strong> My department collaborates with other departments as needed - 85.8%</li>
@@ -923,6 +934,117 @@
             }
         `;
         document.head.appendChild(style);
+
+        // Create Department Chart
+        const ctx = document.getElementById('departmentChart').getContext('2d');
+        
+        // Calculate averages for each department
+        const workplaceExperienceQuestions = [4.43, 3.52, 3.73, 2.78, 3.02, 3.94, 3.58, 3.89, 3.96, 4.01, 3.55, 3.42, 3.50, 3.05, 3.73, 3.67, 3.81, 3.62, 3.50];
+        const supervisorsColleaguesQuestions = [4.05, 3.76, 3.95, 3.18, 4.18, 4.11, 3.73, 3.68, 3.03, 3.65, 3.91, 3.51, 3.99, 4.19, 3.79, 3.98, 3.69];
+        const jobTasksGrowthQuestions = [4.00, 2.52, 3.24, 3.47, 3.66, 3.44, 3.37, 3.31, 3.52, 3.19];
+        
+        const workplaceAvg = workplaceExperienceQuestions.reduce((a, b) => a + b, 0) / workplaceExperienceQuestions.length;
+        const supervisorsAvg = supervisorsColleaguesQuestions.reduce((a, b) => a + b, 0) / supervisorsColleaguesQuestions.length;
+        const jobTasksAvg = jobTasksGrowthQuestions.reduce((a, b) => a + b, 0) / jobTasksGrowthQuestions.length;
+
+        const departmentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Workplace Experience and Employee Enablement', 'Supervisors and Colleagues', 'Job Tasks and Growth Opportunities'],
+                datasets: [{
+                    label: 'Average grades',
+                    data: [workplaceAvg.toFixed(2), supervisorsAvg.toFixed(2), jobTasksAvg.toFixed(2)],
+                    backgroundColor: [
+                        '#3B82F6', // Blue
+                        '#10B981', // Green  
+                        '#F59E0B'  // Orange
+                    ],
+                    borderColor: [
+                        '#2563EB',
+                        '#059669',
+                        '#D97706'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Average grades by section',
+                        font: {
+                            family: 'Noto Sans Arabic',
+                            size: 18,
+                            weight: 'bold'
+                        },
+                        color: '#0052CC',
+                        padding: 20
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 5,
+                        title: {
+                            display: true,
+                            text: 'Average grades',
+                            font: {
+                                family: 'Noto Sans Arabic',
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            color: '#64748B'
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Noto Sans Arabic',
+                                size: 12
+                            },
+                            color: '#64748B'
+                        },
+                        grid: {
+                            color: '#E2E8F0'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'section',
+                            font: {
+                                family: 'Noto Sans Arabic',
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            color: '#64748B'
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Noto Sans Arabic',
+                                size: 11,
+                                weight: '500'
+                            },
+                            color: '#1E293B',
+                            maxRotation: 0,
+                            minRotation: 0
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuart'
+                }
+            }
+        });
     </script>
 </body>
 </html>
